@@ -5,23 +5,25 @@ import { CSSTransition } from "react-transition-group";
 import Backdrop from "./Backdrop";
 import "./Modal.css";
 
-const ModalOverlay = props => {
+const ModalOverlay = ({
+  className,
+  style,
+  headerClass,
+  header,
+  onSubmit,
+  contentClass,
+  footerClass,
+  footer,
+  children,
+}) => {
   const content = (
-    <div className={`modal ${props.className}`} style={props.style}>
-      <header className={`modal__header ${props.headerClass}`}>
-        <h2>{props.header}</h2>
+    <div className={`modal ${className}`} style={style}>
+      <header className={`modal__header ${headerClass}`}>
+        <h2>{header}</h2>
       </header>
-      <form
-        onSubmit={
-          props.onSubmit ? props.onSubmit : event => event.preventDefault()
-        }
-      >
-        <div className={`modal__content ${props.contentClass}`}>
-          {props.children}
-        </div>
-        <footer className={`modal__footer ${props.footerClass}`}>
-          {props.footer}
-        </footer>
+      <form onSubmit={onSubmit ? onSubmit : event => event.preventDefault()}>
+        <div className={`modal__content ${contentClass}`}>{children}</div>
+        <footer className={`modal__footer ${footerClass}`}>{footer}</footer>
       </form>
     </div>
   );
