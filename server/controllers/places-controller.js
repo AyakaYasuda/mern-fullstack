@@ -16,6 +16,7 @@ const { v4: uuidv4 } = require("uuid");
 const { validationResult } = require("express-validator");
 
 const HttpError = require("../models/http-error");
+const getCoordsForAddress = require("../util/location");
 
 const getPlaceById = (req, res, next) => {
   const placeId = req.params.pid; // { pid: "p1" }
@@ -45,23 +46,29 @@ const getPlacesByUserId = (req, res, next) => {
   res.json({ places: places });
 };
 
-const createPlace = (req, res, next) => {
+const createPlace = async (req, res, next) => {
   const errors = validationResult(req);
 
   if (!errors.isEmpty()) {
-    console.log(errors);
     return next(
       new HttpError("Invalid inputs passed, please check your data", 422)
     );
   }
 
-  const { title, description, coordinate, address, creator } = req.body;
+  const { title, description, address, creator } = req.body;
+
+  let coordinates;
+  try {
+    coordinates = await getCoordsForAddress(address);
+  } catch (error) {
+    return next(error);
+  }
 
   const createdPlace = {
     id: uuidv4(),
     title,
     description,
-    location: coordinate,
+    location: coordinates,
     address,
     creator,
   };
