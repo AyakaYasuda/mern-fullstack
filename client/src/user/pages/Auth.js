@@ -5,6 +5,7 @@ import Input from "../../shared/components/FormElements/Input";
 import Button from "../../shared/components/FormElements/Button";
 import ErrorModal from "../../shared/components/UI/ErrorModal";
 import LoadingSpinner from "../../shared/components/UI/LoadingSpinner";
+import ImageUpload from "../../shared/components/FormElements/ImageUpload";
 import {
   VALIDATOR_REQUIRE,
   VALIDATOR_EMAIL,
@@ -34,6 +35,7 @@ const Auth = () => {
         {
           ...formState.inputs,
           username: undefined,
+          image: undefined,
         },
         formState.inputs.email.isValid && formState.inputs.password.isValid
       );
@@ -42,6 +44,7 @@ const Auth = () => {
         {
           ...formState.inputs,
           username: { value: "", isValid: false },
+          image: { value: "", isValid: false },
         },
         false
       );
@@ -51,6 +54,8 @@ const Auth = () => {
 
   const authSubmitHandler = async event => {
     event.preventDefault();
+
+    console.log(formState.inputs);
 
     if (isLoginMode) {
       try {
@@ -104,6 +109,9 @@ const Auth = () => {
               validators={[VALIDATOR_REQUIRE()]}
               onInput={inputHandler}
             />
+          )}
+          {!isLoginMode && (
+            <ImageUpload id="image" center onInput={inputHandler} />
           )}
           <Input
             id="email"
